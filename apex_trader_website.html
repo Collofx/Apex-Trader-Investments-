@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX TRADER — ICT Trading Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   ROOT & RESET
+═══════════════════════════════════════════ */
+:root {
+  --bg:       #050810;
+  --bg2:      #080c14;
+  --surface:  #0c1220;
+  --card:     #0f1628;
+  --border:   #1a2540;
+  --border2:  #243050;
+  --bull:     #00e5a0;
+  --bull2:    #00b87a;
+  --bear:     #ff3d5a;
+  --bear2:    #cc2040;
+  --gold:     #f0b429;
+  --accent:   #4d9fff;
+  --accent2:  #2070cc;
+  --text:     #d0dff0;
+  --muted:    #607090;
+  --dim:      #304060;
+  --heading:  'Bebas Neue', sans-serif;
+  --mono:     'DM Mono', monospace;
+  --body:     'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* Grid texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(77,159,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(77,159,255,.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ═══════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5vw;
+  height: 64px;
+  background: rgba(5,8,16,.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--heading);
+  font-size: 26px; letter-spacing: 4px;
+  color: var(--text);
+}
+.nav-logo span { color: var(--bull); }
+.nav-links {
+  display: flex; gap: 32px; list-style: none;
+}
+.nav-links a {
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  display: flex; gap: 10px; align-items: center;
+}
+.btn {
+  font-family: var(--body); font-size: 12px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 9px 20px; border-radius: 2px;
+  cursor: pointer; transition: all .2s;
+  text-decoration: none; display: inline-block;
+}
+.btn-ghost {
+  background: transparent; border: 1px solid var(--border2);
+  color: var(--muted);
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn-primary {
+  background: var(--bull); border: 1px solid var(--bull);
+  color: #050810;
+}
+.btn-primary:hover { background: var(--bull2); border-color: var(--bull2); }
+.btn-gold {
+  background: var(--gold); border: 1px solid var(--gold);
+  color: #050810;
+}
+.btn-gold:hover { filter: brightness(1.1); }
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 120px 5vw 80px;
+  overflow: hidden;
+}
+
+/* Animated orbs */
+.orb {
+  position: absolute; border-radius: 50%; filter: blur(80px);
+  pointer-events: none; animation: drift 12s ease-in-out infinite;
+}
+.orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,229,160,.12), transparent 70%);
+  top: -100px; right: -100px; animation-delay: 0s;
+}
+.orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(77,159,255,.1), transparent 70%);
+  bottom: 0; left: -50px; animation-delay: 4s;
+}
+.orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,61,90,.08), transparent 70%);
+  top: 50%; right: 30%; animation-delay: 8s;
+}
+@keyframes drift {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%      { transform: translate(30px,-20px) scale(1.05); }
+  66%      { transform: translate(-20px,30px) scale(.95); }
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 700px; }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+  color: var(--bull); text-transform: uppercase;
+  border: 1px solid rgba(0,229,160,.25);
+  padding: 6px 14px; border-radius: 2px;
+  background: rgba(0,229,160,.05);
+  margin-bottom: 28px;
+}
+.hero-tag::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--bull); animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+
+.hero h1 {
+  font-family: var(--heading);
+  font-size: clamp(52px, 8vw, 110px);
+  line-height: .95; letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--bull), var(--accent));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 16px; line-height: 1.7; color: var(--muted);
+  max-width: 520px; margin-bottom: 40px;
+}
+.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 60px; }
+.btn-lg { padding: 14px 32px; font-size: 13px; }
+
+.hero-stats {
+  display: flex; gap: 40px; flex-wrap: wrap;
+}
+.hstat {
+  border-left: 2px solid var(--border2);
+  padding-left: 16px;
+}
+.hstat-val {
+  font-family: var(--heading); font-size: 32px;
+  color: var(--text); letter-spacing: 2px;
+}
+.hstat-val span { color: var(--bull); }
+.hstat-lbl {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); margin-top: 2px;
+}
+
+/* Live ticker strip */
+.ticker-strip {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(12,18,32,.9);
+  border-top: 1px solid var(--border);
+  padding: 10px 0;
+  overflow: hidden;
+}
+.ticker-inner {
+  display: flex; gap: 48px;
+  animation: scroll 30s linear infinite;
+  white-space: nowrap;
+}
+.ticker-inner:hover { animation-play-state: paused; }
+@keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.tick-item {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 12px;
+}
+.tick-sym { color: var(--muted); letter-spacing: 1px; }
+.tick-price { color: var(--text); }
+.tick-chg { font-size: 10px; }
+.tick-chg.up { color: var(--bull); }
+.tick-chg.dn { color: var(--bear); }
+
+/* ═══════════════════════════════════════════
+   SECTION COMMONS
+═══════════════════════════════════════════ */
+section { position: relative; z-index: 1; padding: 100px 5vw; }
+.sec-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--bull);
+  margin-bottom: 12px;
+}
+.sec-title {
+  font-family: var(--heading); font-size: clamp(36px, 5vw, 64px);
+  letter-spacing: 2px; color: var(--text);
+  line-height: 1; margin-bottom: 16px;
+}
+.sec-sub {
+  font-size: 15px; color: var(--muted); line-height: 1.7;
+  max-width: 560px;
+}
+.sec-header { margin-bottom: 64px; }
+
+/* ═══════════════════════════════════════════
+   DASHBOARD PREVIEW
+═══════════════════════════════════════════ */
+#dashboard { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 16px;
+}
+
+.dash-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .3s, transform .3s;
+}
+.dash-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.dash-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.dash-card.bull::before { background: linear-gradient(90deg, transparent, var(--bull), transparent); }
+.dash-card.bear::before { background: linear-gradient(90deg, transparent, var(--bear), transparent); }
+.dash-card.gold::before { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.dash-card.accent::before { background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+
+.dash-card.span2 { grid-column: span 2; }
+.dash-card.span3 { grid-column: span 3; }
+
+.card-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 14px;
+}
+.card-value {
+  font-family: var(--heading); font-size: 42px; letter-spacing: 2px;
+  line-height: 1;
+}
+.card-sub {
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  margin-top: 6px;
+}
+
+/* Signal card */
+.sig-display {
+  display: flex; justify-content: space-between; align-items: flex-start;
+}
+.sig-big {
+  font-family: var(--heading); font-size: 72px; letter-spacing: 3px;
+  line-height: 1;
+}
+.sig-big.buy { color: var(--bull); text-shadow: 0 0 40px rgba(0,229,160,.3); }
+.sig-big.sell { color: var(--bear); text-shadow: 0 0 40px rgba(255,61,90,.3); }
+
+.levels-mini { display: flex; flex-direction: column; gap: 6px; text-align: right; }
+.lm-row { display: flex; justify-content: space-between; gap: 16px; align-items: center; }
+.lm-lbl { font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+.lm-val { font-family: var(--mono); font-size: 13px; }
+
+/* Mini chart bars */
+.mini-chart {
+  display: flex; align-items: flex-end; gap: 3px;
+  height: 50px; margin-top: 12px;
+}
+.bar {
+  flex: 1; border-radius: 1px 1px 0 0;
+  transition: height .3s;
+}
+.bar.up { background: var(--bull); opacity: .7; }
+.bar.dn { background: var(--bear); opacity: .7; }
+.bar.active { opacity: 1; }
+
+/* Journal table */
+.j-table { width: 100%; border-collapse: collapse; }
+.j-table th {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+  padding: 0 0 10px; text-align: left; border-bottom: 1px solid var(--border);
+}
+.j-table td {
+  padding: 10px 0; border-bottom: 1px solid rgba(26,37,64,.5);
+  font-size: 13px;
+}
+.j-table tr:last-child td { border-bottom: none; }
+.badge {
+  font-family: var(--mono); font-size: 9px; font-weight: 500;
+  padding: 3px 8px; border-radius: 2px; letter-spacing: 1px;
+}
+.badge.buy  { background: rgba(0,229,160,.1); color: var(--bull); }
+.badge.sell { background: rgba(255,61,90,.1); color: var(--bear); }
+.badge.win  { background: rgba(0,229,160,.1); color: var(--bull); }
+.badge.loss { background: rgba(255,61,90,.1); color: var(--bear); }
+
+/* News feed */
+.news-list { display: flex; flex-direction: column; gap: 0; }
+.news-item {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(26,37,64,.5);
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.news-item:last-child { border-bottom: none; }
+.news-dot {
+  width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0;
+}
+.news-title { font-size: 13px; line-height: 1.4; color: var(--text); }
+.news-meta { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+/* ═══════════════════════════════════════════
+   FEATURES
+═══════════════════════════════════════════ */
+#features { background: var(--bg); }
+
+.features-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.feat-item {
+  background: var(--bg);
+  padding: 40px 32px;
+  transition: background .3s;
+}
+.feat-item:hover { background: var(--card); }
+.feat-icon {
+  font-size: 28px; margin-bottom: 20px;
+  display: block;
+}
+.feat-title {
+  font-family: var(--heading); font-size: 22px; letter-spacing: 2px;
+  color: var(--text); margin-bottom: 10px;
+}
+.feat-desc {
+  font-size: 14px; line-height: 1.7; color: var(--muted);
+}
+
+/* ═══════════════════════════════════════════
+   PRICING
+═══════════════════════════════════════════ */
+#pricing { background: var(--bg2); border-top: 1px solid var(--border); }
+
+.pricing-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+  max-width: 1000px; margin: 0 auto;
+}
+.price-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 36px 28px;
+  position: relative;
+  transition: transform .3s, border-color .3s;
+}
+.price-card:hover { transform: translateY(-4px); }
+.price-card.featured {
+  border-color: var(--gold);
+  background: linear-gradient(160deg, #0f1628, #141e30);
+}
+.price-card.featured::before {
+  content: 'MOST POPULAR';
+  position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: #050810;
+  font-family: var(--mono); font-size: 9px; font-weight: 500;
+  letter-spacing: 2px; padding: 4px 14px;
+  border-radius: 0 0 3px 3px;
+}
+.plan-name {
+  font-family: var(--heading); font-size: 28px; letter-spacing: 3px;
+  color: var(--text); margin-bottom: 8px;
+}
+.plan-price {
+  font-family: var(--heading); font-size: 56px; letter-spacing: 2px;
+  line-height: 1; margin-bottom: 6px;
+}
+.plan-price sup { font-size: 24px; vertical-align: top; margin-top: 8px; }
+.plan-price span { font-size: 16px; color: var(--muted); font-family: var(--body); }
+.plan-desc {
+  font-size: 13px; color: var(--muted); margin-bottom: 28px;
+  padding-bottom: 28px; border-bottom: 1px solid var(--border);
+}
+.plan-features { list-style: none; margin-bottom: 32px; }
+.plan-features li {
+  font-size: 13px; padding: 7px 0;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid rgba(26,37,64,.4);
+}
+.plan-features li:last-child { border-bottom: none; }
+.plan-features li::before {
+  content: '✓'; color: var(--bull);
+  font-family: var(--mono); font-size: 11px; flex-shrink: 0;
+}
+.plan-features li.no::before { content: '✗'; color: var(--dim); }
+.plan-features li.no { color: var(--dim); }
+
+/* ═══════════════════════════════════════════
+   JOURNAL SECTION
+═══════════════════════════════════════════ */
+#journal { background: var(--bg); border-top: 1px solid var(--border); }
+
+.journal-layout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+}
+.journal-form {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 4px; padding: 32px;
+}
+.form-title {
+  font-family: var(--heading); font-size: 28px; letter-spacing: 2px;
+  margin-bottom: 24px; color: var(--text);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.form-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+}
+.form-input, .form-select, .form-textarea {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 2px; padding: 10px 12px;
+  color: var(--text); font-family: var(--body); font-size: 13px;
+  transition: border-color .2s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none; border-color: var(--accent);
+}
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-select option { background: var(--card); }
+
+.journal-stats {
+  display: flex; flex-direction: column; gap: 20px;
+}
+.jstat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 4px; padding: 24px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.jstat-info {}
+.jstat-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+}
+.jstat-value {
+  font-family: var(--heading); font-size: 36px; letter-spacing: 2px;
+}
+.jstat-bar {
+  width: 80px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;
+}
+.jstat-fill { height: 100%; border-radius: 2px; }
+
+/* ═══════════════════════════════════════════
+   ECONOMIC CALENDAR
+═══════════════════════════════════════════ */
+#calendar { background: var(--bg2); border-top: 1px solid var(--border); }
+
+.cal-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+}
+.cal-list { display: flex; flex-direction: column; gap: 0; }
+.cal-item {
+  display: grid; grid-template-columns: 80px 1fr auto;
+  gap: 16px; align-items: center;
+  padding: 14px 0; border-bottom: 1px solid rgba(26,37,64,.5);
+}
+.cal-item:last-child { border-bottom: none; }
+.cal-time { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.cal-event-name { font-size: 13px; color: var(--text); }
+.cal-country { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
+.impact {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 1px;
+  padding: 3px 8px; border-radius: 2px; text-align: center;
+}
+.impact.high   { background: rgba(255,61,90,.12); color: var(--bear); }
+.impact.medium { background: rgba(240,180,41,.12); color: var(--gold); }
+.impact.low    { background: rgba(96,112,144,.12); color: var(--muted); }
+
+/* Geopolitics */
+.geo-list { display: flex; flex-direction: column; gap: 16px; }
+.geo-item {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 4px; padding: 18px 20px;
+  transition: border-color .2s;
+}
+.geo-item:hover { border-color: var(--border2); }
+.geo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.geo-title { font-size: 14px; font-weight: 500; color: var(--text); }
+.geo-impact-badge {
+  font-family: var(--mono); font-size: 9px; padding: 2px 8px;
+  border-radius: 2px; letter-spacing: 1px;
+}
+.geo-impact-badge.bullish { background: rgba(0,229,160,.1); color: var(--bull); }
+.geo-impact-badge.bearish { background: rgba(255,61,90,.1); color: var(--bear); }
+.geo-impact-badge.neutral { background: rgba(77,159,255,.1); color: var(--accent); }
+.geo-body { font-size: 12px; line-height: 1.6; color: var(--muted); }
+.geo-pair { font-family: var(--mono); font-size: 10px; color: var(--accent); margin-top: 8px; }
+
+/* ═══════════════════════════════════════════
+   LOGIN / REGISTER MODAL
+═══════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(5,8,16,.9); backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: 4px; padding: 40px;
+  width: 100%; max-width: 420px;
+  position: relative;
+  animation: fadeUp .3s ease;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+.modal-close {
+  position: absolute; top: 16px; right: 16px;
+  background: none; border: none; color: var(--muted);
+  font-size: 20px; cursor: pointer; line-height: 1;
+}
+.modal-close:hover { color: var(--text); }
+.modal-title {
+  font-family: var(--heading); font-size: 32px; letter-spacing: 2px;
+  color: var(--text); margin-bottom: 6px;
+}
+.modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+.modal-tabs {
+  display: flex; gap: 0; margin-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-tab {
+  padding: 8px 20px; font-size: 12px; letter-spacing: 2px;
+  text-transform: uppercase; cursor: pointer;
+  color: var(--muted); border-bottom: 2px solid transparent;
+  transition: all .2s; margin-bottom: -1px; background: none; border-top: none; border-left: none; border-right: none;
+  font-family: var(--body);
+}
+.modal-tab.active { color: var(--bull); border-bottom-color: var(--bull); }
+.modal-form { display: flex; flex-direction: column; gap: 14px; }
+.modal-divider {
+  text-align: center; font-size: 11px; color: var(--muted);
+  letter-spacing: 2px; margin: 4px 0;
+  position: relative;
+}
+.modal-divider::before, .modal-divider::after {
+  content: ''; position: absolute; top: 50%;
+  width: 42%; height: 1px; background: var(--border);
+}
+.modal-divider::before { left: 0; }
+.modal-divider::after  { right: 0; }
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 48px 5vw 24px;
+  position: relative; z-index: 1;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px; margin-bottom: 48px;
+}
+.footer-brand .nav-logo { font-size: 28px; margin-bottom: 12px; display: block; }
+.footer-desc { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 280px; }
+.footer-col-title {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--text); margin-bottom: 16px;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a {
+  font-size: 13px; color: var(--muted); text-decoration: none;
+  transition: color .2s;
+}
+.footer-links a:hover { color: var(--text); }
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 24px; border-top: 1px solid var(--border);
+  font-size: 12px; color: var(--dim);
+  font-family: var(--mono);
+}
+.disclaimer {
+  font-size: 11px; color: var(--dim); line-height: 1.6;
+  margin-top: 16px; padding: 16px;
+  border: 1px solid var(--border); border-radius: 2px;
+  background: rgba(5,8,16,.5);
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .dash-grid { grid-template-columns: 1fr 1fr; }
+  .dash-card.span3 { grid-column: span 2; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+  .journal-layout { grid-template-columns: 1fr; }
+  .cal-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .dash-grid { grid-template-columns: 1fr; }
+  .dash-card.span2, .dash-card.span3 { grid-column: span 1; }
+  .features-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 52px; }
+  .form-row { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 20px; }
+  .modal { padding: 28px 20px; margin: 16px; }
+}
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════ */
+.fade-in {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">APEX<span>TRADER</span></div>
+  <ul class="nav-links">
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#journal">Journal</a></li>
+    <li><a href="#calendar">Calendar</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="#" class="btn btn-ghost" onclick="openModal('login')">Log In</a>
+    <a href="#" class="btn btn-primary" onclick="openModal('register')">Start Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">ICT Smart Money · Live Signals · Real-Time</div>
+    <h1>TRADE LIKE<br>AN <em>INSTITUTION</em></h1>
+    <p class="hero-sub">Professional ICT-based signals for USDJPY, EURUSD, GBPUSD and more. Order blocks, fair value gaps, liquidity sweeps — all analyzed automatically so you just execute.</p>
+    <div class="hero-btns">
+      <a href="#" class="btn btn-primary btn-lg" onclick="openModal('register')">Start Trading Free</a>
+      <a href="#dashboard" class="btn btn-ghost btn-lg">View Dashboard ↓</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat">
+        <div class="hstat-val">68<span>%</span></div>
+        <div class="hstat-lbl">Win Rate</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val">1<span>:</span>2.8</div>
+        <div class="hstat-lbl">Avg Risk:Reward</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val">5</div>
+        <div class="hstat-lbl">Pairs Covered</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val">H1</div>
+        <div class="hstat-lbl">Signal Timeframe</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Ticker -->
+  <div class="ticker-strip">
+    <div class="ticker-inner" id="tickerInner"></div>
+  </div>
+</section>
+
+<!-- DASHBOARD PREVIEW -->
+<section id="dashboard">
+  <div class="sec-header fade-in">
+    <div class="sec-label">Live Dashboard</div>
+    <div class="sec-title">EVERYTHING IN<br>ONE PLACE</div>
+    <p class="sec-sub">Your signals, journal, news and market calendar — all on one screen. No jumping between apps.</p>
+  </div>
+
+  <div class="dash-grid fade-in">
+
+    <!-- Signal Card -->
+    <div class="dash-card bull span2">
+      <div class="card-label">Active Signal — USDJPY</div>
+      <div class="sig-display">
+        <div>
+          <div class="sig-big buy" id="sigDisplay">BUY</div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px">CONFLUENCES: 8/10 · H1 · LONDON SESSION</div>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+            <span style="font-family:var(--mono);font-size:9px;background:rgba(0,229,160,.1);color:var(--bull);padding:3px 8px;border-radius:2px">HTF BULL ✓</span>
+            <span style="font-family:var(--mono);font-size:9px;background:rgba(0,229,160,.1);color:var(--bull);padding:3px 8px;border-radius:2px">ORDER BLOCK ✓</span>
+            <span style="font-family:var(--mono);font-size:9px;background:rgba(0,229,160,.1);color:var(--bull);padding:3px 8px;border-radius:2px">FVG ✓</span>
+            <span style="font-family:var(--mono);font-size:9px;background:rgba(0,229,160,.1);color:var(--bull);padding:3px 8px;border-radius:2px">BOS ✓</span>
+            <span style="font-family:var(--mono);font-size:9px;background:rgba(0,229,160,.1);color:var(--bull);padding:3px 8px;border-radius:2px">LIQUIDITY ✓</span>
+          </div>
+        </div>
+        <div class="levels-mini">
+          <div class="lm-row">
+            <span class="lm-lbl">ENTRY</span>
+            <span class="lm-val" style="color:var(--accent)" id="dEntry">149.845</span>
+          </div>
+          <div class="lm-row">
+            <span class="lm-lbl">STOP LOSS</span>
+            <span class="lm-val" style="color:var(--bear)" id="dSL">149.510</span>
+          </div>
+          <div class="lm-row">
+            <span class="lm-lbl">TP 1</span>
+            <span class="lm-val" style="color:var(--bull)" id="dTP1">150.295</span>
+          </div>
+          <div class="lm-row">
+            <span class="lm-lbl">TP 2</span>
+            <span class="lm-val" style="color:var(--bull2)" id="dTP2">150.845</span>
+          </div>
+          <div class="lm-row">
+            <span class="lm-lbl">TP 3</span>
+            <span class="lm-val" style="color:#007a55" id="dTP3">151.520</span>
+          </div>
+        </div>
+      </div>
+      <div class="mini-chart" id="miniChart"></div>
+    </div>
+
+    <!-- Account Stats -->
+    <div class="dash-card accent">
+      <div class="card-label">Account P&L Today</div>
+      <div class="card-value" style="color:var(--bull)" id="pnlDisplay">+$0.00</div>
+      <div class="card-sub" id="pipsDisplay">0.0 pips · 0 trades</div>
+      <div style="margin-top:16px;height:3px;background:var(--border);border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:0%;background:var(--bull);border-radius:2px;transition:width 1s" id="pnlBar"></div>
+      </div>
+    </div>
+
+    <!-- News Feed -->
+    <div class="dash-card span2">
+      <div class="card-label">Market News & Geopolitics</div>
+      <div class="news-list" id="newsList"></div>
+    </div>
+
+    <!-- Session -->
+    <div class="dash-card gold">
+      <div class="card-label">Active Session</div>
+      <div class="card-value" style="color:var(--gold);font-size:28px" id="sessionDisplay">LONDON</div>
+      <div class="card-sub" id="sessionTime">08:00 – 16:00 GMT</div>
+      <div style="margin-top:16px">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:6px">NEXT H1 CANDLE</div>
+        <div style="font-family:var(--heading);font-size:28px;letter-spacing:2px" id="timerDash">--:--</div>
+      </div>
+    </div>
+
+    <!-- Trade Journal Preview -->
+    <div class="dash-card span3">
+      <div class="card-label">Recent Journal Entries</div>
+      <table class="j-table">
+        <thead>
+          <tr>
+            <th>PAIR</th>
+            <th>DIR</th>
+            <th>ENTRY</th>
+            <th>EXIT</th>
+            <th>PIPS</th>
+            <th>RESULT</th>
+            <th>SESSION</th>
+          </tr>
+        </thead>
+        <tbody id="journalPreview"></tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="sec-header fade-in" style="text-align:center;margin:0 auto 64px">
+    <div class="sec-label">Why Apex Trader</div>
+    <div class="sec-title">BUILT FOR<br>DAY TRADERS</div>
+  </div>
+
+  <div class="features-grid fade-in">
+    <div class="feat-item">
+      <span class="feat-icon">📊</span>
+      <div class="feat-title">ICT SIGNALS</div>
+      <p class="feat-desc">Order blocks, fair value gaps, break of structure, liquidity sweeps and market structure shift — all scored automatically. Only fires when 7+ confluences align.</p>
+    </div>
+    <div class="feat-item">
+      <span class="feat-icon">🔒</span>
+      <div class="feat-title">NO FLIP-FLOP</div>
+      <p class="feat-desc">Once a BUY fires, it stays BUY. Direction only changes after confirmed opposing structure + 4-hour cooldown. No more confusing contradictory signals.</p>
+    </div>
+    <div class="feat-item">
+      <span class="feat-icon">📓</span>
+      <div class="feat-title">TRADE JOURNAL</div>
+      <p class="feat-desc">Log every trade with entry, exit, pips, session, notes and screenshots. Track your win rate, R:R ratio and drawdown automatically over time.</p>
+    </div>
+    <div class="feat-item">
+      <span class="feat-icon">📰</span>
+      <div class="feat-title">MARKET NEWS</div>
+      <p class="feat-desc">Real-time forex news, geopolitical events and their direct impact on your pairs. Know what's moving the market before you trade.</p>
+    </div>
+    <div class="feat-item">
+      <span class="feat-icon">📅</span>
+      <div class="feat-title">ECON CALENDAR</div>
+      <p class="feat-desc">NFP, CPI, FOMC, BOJ — all high-impact events flagged with expected market impact. Avoid trading into news or use it as a catalyst.</p>
+    </div>
+    <div class="feat-item">
+      <span class="feat-icon">📱</span>
+      <div class="feat-title">INSTALL AS APP</div>
+      <p class="feat-desc">Full PWA — install directly on Android or iOS home screen. Opens fullscreen like a native app. Works on any device, no App Store needed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="sec-header fade-in" style="text-align:center;margin:0 auto 64px">
+    <div class="sec-label">Simple Pricing</div>
+    <div class="sec-title">START FREE,<br>UPGRADE WHEN READY</div>
+  </div>
+
+  <div class="pricing-grid fade-in">
+    <!-- Free -->
+    <div class="price-card">
+      <div class="plan-name">FREE</div>
+      <div class="plan-price" style="color:var(--text)">$<span style="font-size:16px;color:var(--muted)">/mo</span></div>
+      <div style="font-family:var(--heading);font-size:48px;color:var(--text);margin-bottom:6px">0</div>
+      <p class="plan-desc">Everything you need to get started. No credit card required.</p>
+      <ul class="plan-features">
+        <li>USDJPY signals only</li>
+        <li>H1 timeframe</li>
+        <li>Basic trade journal</li>
+        <li>Market news feed</li>
+        <li class="no">Economic calendar</li>
+        <li class="no">Geopolitics feed</li>
+        <li class="no">All 5 pairs</li>
+        <li class="no">Priority signals</li>
+      </ul>
+      <a href="#" class="btn btn-ghost" style="width:100%;text-align:center;display:block" onclick="openModal('register')">Get Started Free</a>
+    </div>
+
+    <!-- Pro -->
+    <div class="price-card featured">
+      <div class="plan-name" style="color:var(--gold)">PRO</div>
+      <div style="font-family:var(--heading);font-size:48px;color:var(--gold);margin-bottom:6px">$29</div>
+      <div style="font-family:var(--body);font-size:14px;color:var(--muted);margin-bottom:20px">/month</div>
+      <p class="plan-desc">Full access. Serious traders only.</p>
+      <ul class="plan-features">
+        <li>All 5 pairs (USDJPY, EURUSD, GBPUSD, AUDUSD, XAUUSD)</li>
+        <li>H1 + M15 timeframes</li>
+        <li>Full trade journal + analytics</li>
+        <li>Real-time news feed</li>
+        <li>Economic calendar</li>
+        <li>Geopolitics impact feed</li>
+        <li>Push notifications</li>
+        <li>Priority signal alerts</li>
+      </ul>
+      <a href="#" class="btn btn-gold" style="width:100%;text-align:center;display:block" onclick="openModal('register')">Start Pro — $29/mo</a>
+    </div>
+
+    <!-- Lifetime -->
+    <div class="price-card">
+      <div class="plan-name">LIFETIME</div>
+      <div style="font-family:var(--heading);font-size:48px;color:var(--accent);margin-bottom:6px">$149</div>
+      <div style="font-family:var(--body);font-size:14px;color:var(--muted);margin-bottom:20px">one-time</div>
+      <p class="plan-desc">Pay once, own it forever. Best value for serious traders.</p>
+      <ul class="plan-features">
+        <li>Everything in Pro</li>
+        <li>Lifetime updates</li>
+        <li>No monthly fees ever</li>
+        <li>Early access to new features</li>
+        <li>Direct support</li>
+        <li class="no">White-label version</li>
+        <li class="no">Custom pairs</li>
+        <li class="no">API access</li>
+      </ul>
+      <a href="#" class="btn btn-ghost" style="width:100%;text-align:center;display:block;border-color:var(--accent);color:var(--accent)" onclick="openModal('register')">Get Lifetime Access</a>
+    </div>
+  </div>
+</section>
+
+<!-- TRADE JOURNAL -->
+<section id="journal">
+  <div class="sec-header fade-in">
+    <div class="sec-label">Trade Journal</div>
+    <div class="sec-title">TRACK EVERY<br>TRADE YOU MAKE</div>
+    <p class="sec-sub">The fastest way to improve is to review your trades. Log entries in seconds, see your stats grow over time.</p>
+  </div>
+
+  <div class="journal-layout fade-in">
+    <div class="journal-form">
+      <div class="form-title">LOG A TRADE</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Pair</label>
+          <select class="form-select" id="jPair">
+            <option>USD/JPY</option><option>EUR/USD</option>
+            <option>GBP/USD</option><option>AUD/USD</option><option>XAU/USD</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Direction</label>
+          <select class="form-select" id="jDir">
+            <option>BUY</option><option>SELL</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Entry Price</label>
+          <input class="form-input" id="jEntry" type="number" step="0.001" placeholder="0.00000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Exit Price</label>
+          <input class="form-input" id="jExit" type="number" step="0.001" placeholder="0.00000">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Stop Loss</label>
+          <input class="form-input" id="jSL" type="number" step="0.001" placeholder="0.00000">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Lot Size</label>
+          <input class="form-input" id="jLots" type="number" step="0.01" placeholder="0.01">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Session</label>
+        <select class="form-select" id="jSession">
+          <option>London</option><option>New York</option>
+          <option>London/NY Overlap</option><option>Asian</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" id="jNotes" placeholder="What was the setup? What went right or wrong?"></textarea>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="logTrade()">LOG TRADE</button>
+    </div>
+
+    <div class="journal-stats" id="journalStats">
+      <div class="jstat-card">
+        <div class="jstat-info">
+          <div class="jstat-label">Total Trades</div>
+          <div class="jstat-value" id="jTotal" style="color:var(--text)">0</div>
+        </div>
+      </div>
+      <div class="jstat-card">
+        <div class="jstat-info">
+          <div class="jstat-label">Win Rate</div>
+          <div class="jstat-value" id="jWinRate" style="color:var(--bull)">--%</div>
+        </div>
+        <div>
+          <div class="jstat-bar"><div class="jstat-fill" id="jWinBar" style="background:var(--bull);width:0%"></div></div>
+        </div>
+      </div>
+      <div class="jstat-card">
+        <div class="jstat-info">
+          <div class="jstat-label">Total Pips</div>
+          <div class="jstat-value" id="jPips" style="color:var(--bull)">0</div>
+        </div>
+      </div>
+      <div class="jstat-card">
+        <div class="jstat-info">
+          <div class="jstat-label">Best Trade</div>
+          <div class="jstat-value" id="jBest" style="color:var(--gold)">--</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ECONOMIC CALENDAR + GEOPOLITICS -->
+<section id="calendar">
+  <div class="sec-header fade-in">
+    <div class="sec-label">Market Intelligence</div>
+    <div class="sec-title">KNOW WHAT'S<br>MOVING THE MARKET</div>
+    <p class="sec-sub">Economic events and geopolitical developments that directly impact your pairs — updated daily.</p>
+  </div>
+
+  <div class="cal-grid fade-in">
+    <div>
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--muted);margin-bottom:20px">ECONOMIC CALENDAR — TODAY</div>
+      <div class="cal-list" id="calList"></div>
+    </div>
+    <div>
+      <div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--muted);margin-bottom:20px">GEOPOLITICS & MARKET IMPACT</div>
+      <div class="geo-list" id="geoList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="nav-logo">APEX<span style="color:var(--bull)">TRADER</span></span>
+      <p class="footer-desc">Professional ICT-based forex signals and trading tools. Built for day traders who take their craft seriously.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Platform</div>
+      <ul class="footer-links">
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#journal">Journal</a></li>
+        <li><a href="#calendar">Calendar</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Pairs</div>
+      <ul class="footer-links">
+        <li><a href="#">USD/JPY</a></li>
+        <li><a href="#">EUR/USD</a></li>
+        <li><a href="#">GBP/USD</a></li>
+        <li><a href="#">AUD/USD</a></li>
+        <li><a href="#">XAU/USD</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Account</div>
+      <ul class="footer-links">
+        <li><a href="#" onclick="openModal('login')">Log In</a></li>
+        <li><a href="#" onclick="openModal('register')">Register</a></li>
+        <li><a href="#">Support</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="disclaimer">
+    ⚠ <strong>Risk Disclaimer:</strong> Trading forex involves substantial risk of loss. Past performance does not guarantee future results. ApexTrader signals are for informational purposes only and do not constitute financial advice. Only trade with money you can afford to lose.
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 APEXTRADER · ALL RIGHTS RESERVED</span>
+    <span>BUILT ON ICT CONCEPTS</span>
+  </div>
+</footer>
+
+<!-- LOGIN / REGISTER MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-title">APEX<span style="color:var(--bull)">TRADER</span></div>
+    <p class="modal-sub">Your institutional-grade trading platform</p>
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchTab('login',this)">LOG IN</button>
+      <button class="modal-tab" onclick="switchTab('register',this)">REGISTER</button>
+    </div>
+    <div class="modal-form" id="loginForm">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" placeholder="you@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" placeholder="••••••••">
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="fakeLogin()">LOG IN</button>
+      <div class="modal-divider">OR</div>
+      <button class="btn btn-ghost" style="width:100%" onclick="fakeLogin()">Continue with Google</button>
+    </div>
+    <div class="modal-form" id="registerForm" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" type="text" placeholder="Your name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" placeholder="you@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" placeholder="Create a password">
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="fakeLogin()">CREATE FREE ACCOUNT</button>
+      <div class="modal-divider">OR</div>
+      <button class="btn btn-ghost" style="width:100%" onclick="fakeLogin()">Continue with Google</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  TICKER DATA
+// ═══════════════════════════════════════════
+const tickers = [
+  { sym:'USD/JPY', price:149.845, chg:+0.12 },
+  { sym:'EUR/USD', price:1.08420, chg:-0.08 },
+  { sym:'GBP/USD', price:1.26540, chg:+0.05 },
+  { sym:'AUD/USD', price:0.65310, chg:-0.03 },
+  { sym:'XAU/USD', price:2345.20, chg:+0.34 },
+  { sym:'USD/CAD', price:1.36210, chg:+0.02 },
+  { sym:'EUR/JPY', price:162.340, chg:+0.18 },
+  { sym:'GBP/JPY', price:189.720, chg:+0.22 },
+];
+
+function buildTicker() {
+  // Duplicate for seamless scroll
+  const items = [...tickers, ...tickers].map(t => {
+    const up = t.chg >= 0;
+    return `<div class="tick-item">
+      <span class="tick-sym">${t.sym}</span>
+      <span class="tick-price">${t.price.toFixed(t.sym.includes('JPY')||t.sym.includes('XAU')?t.sym.includes('XAU')?2:3:5)}</span>
+      <span class="tick-chg ${up?'up':'dn'}">${up?'▲':'▼'} ${Math.abs(t.chg).toFixed(2)}%</span>
+    </div>`;
+  }).join('');
+  document.getElementById('tickerInner').innerHTML = items;
+}
+
+// Simulate small price movements
+function tickPrices() {
+  tickers.forEach(t => {
+    const move = (Math.random() - 0.5) * 0.002;
+    t.price = Math.max(0, t.price + move);
+    t.chg += (Math.random() - 0.5) * 0.01;
+  });
+  buildTicker();
+}
+
+// ═══════════════════════════════════════════
+//  MINI CHART
+// ═══════════════════════════════════════════
+function buildMiniChart() {
+  const bars = 24;
+  const data = Array.from({length: bars}, (_,i) =>
+    ({ up: Math.random() > 0.42, h: 20 + Math.random() * 80 })
+  );
+  document.getElementById('miniChart').innerHTML = data.map((d,i) =>
+    `<div class="bar ${d.up?'up':'dn'} ${i===bars-1?'active':''}"
+      style="height:${d.h}%"></div>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════════
+//  NEWS FEED
+// ═══════════════════════════════════════════
+const newsItems = [
+  { title:'BOJ holds rates steady — Yen weakens against Dollar', time:'09:42', color:'var(--bear)', impact:'USDJPY BEARISH' },
+  { title:'US CPI data due tomorrow — traders position ahead of release', time:'08:15', color:'var(--gold)', impact:'USD VOLATILE' },
+  { title:'Fed minutes signal no rush to cut rates in Q1', time:'07:30', color:'var(--bull)', impact:'USD BULLISH' },
+  { title:'UK retail sales disappoint — GBP/USD drops 40 pips', time:'06:00', color:'var(--bear)', impact:'GBPUSD BEARISH' },
+];
+
+function buildNews() {
+  document.getElementById('newsList').innerHTML = newsItems.slice(0,3).map(n =>
+    `<div class="news-item">
+      <div class="news-dot" style="background:${n.color}"></div>
+      <div>
+        <div class="news-title">${n.title}</div>
+        <div class="news-meta">${n.time} GMT · <span style="color:${n.color}">${n.impact}</span></div>
+      </div>
+    </div>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════════
+//  ECONOMIC CALENDAR
+// ═══════════════════════════════════════════
+const calEvents = [
+  { time:'08:30', name:'UK CPI y/y', country:'GBP', impact:'high' },
+  { time:'10:00', name:'EUR ZEW Economic Sentiment', country:'EUR', impact:'medium' },
+  { time:'13:30', name:'US PPI m/m', country:'USD', impact:'high' },
+  { time:'15:00', name:'US ISM Services PMI', country:'USD', impact:'high' },
+  { time:'18:00', name:'FOMC Member Speech', country:'USD', impact:'medium' },
+  { time:'23:50', name:'Japan Trade Balance', country:'JPY', impact:'low' },
+];
+
+function buildCalendar() {
+  document.getElementById('calList').innerHTML = calEvents.map(e =>
+    `<div class="cal-item">
+      <div class="cal-time">${e.time}</div>
+      <div>
+        <div class="cal-event-name">${e.name}</div>
+        <div class="cal-country">${e.country}</div>
+      </div>
+      <div class="impact ${e.impact}">${e.impact.toUpperCase()}</div>
+    </div>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════════
+//  GEOPOLITICS
+// ═══════════════════════════════════════════
+const geoItems = [
+  {
+    title: 'US-China Trade Tensions Escalate',
+    impact: 'bearish', badge: 'RISK-OFF',
+    body: 'New tariff threats push investors toward safe-haven JPY and Gold. USD/JPY sees downward pressure as risk appetite falls.',
+    pair: 'USDJPY · XAUUSD'
+  },
+  {
+    title: 'Bank of Japan Policy Shift Expected',
+    impact: 'bullish', badge: 'JPY BULLISH',
+    body: 'BOJ officials hint at rate normalization timeline. Yen strengthening likely if confirmed at next meeting.',
+    pair: 'USDJPY · EURJPY'
+  },
+  {
+    title: 'UK Election Uncertainty Weighs on GBP',
+    impact: 'bearish', badge: 'GBP BEARISH',
+    body: 'Political uncertainty ahead of UK elections creating headwinds for Sterling. Watch for increased volatility.',
+    pair: 'GBPUSD · GBPJPY'
+  },
+];
+
+function buildGeo() {
+  document.getElementById('geoList').innerHTML = geoItems.map(g =>
+    `<div class="geo-item">
+      <div class="geo-header">
+        <div class="geo-title">${g.title}</div>
+        <span class="geo-impact-badge ${g.impact}">${g.badge}</span>
+      </div>
+      <div class="geo-body">${g.body}</div>
+      <div class="geo-pair">AFFECTS: ${g.pair}</div>
+    </div>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════════
+//  JOURNAL PREVIEW
+// ═══════════════════════════════════════════
+const journalData = [
+  { pair:'USD/JPY', dir:'buy',  entry:'149.520', exit:'150.105', pips:'+58.5', result:'win',  session:'London' },
+  { pair:'EUR/USD', dir:'sell', entry:'1.08650', exit:'1.08290', pips:'+36.0', result:'win',  session:'NY' },
+  { pair:'GBP/USD', dir:'buy',  entry:'1.26100', exit:'1.25840', pips:'-26.0', result:'loss', session:'London' },
+  { pair:'USD/JPY', dir:'sell', entry:'150.200', exit:'149.680', pips:'+52.0', result:'win',  session:'NY Overlap' },
+];
+
+function buildJournalPreview() {
+  document.getElementById('journalPreview').innerHTML = journalData.map(t =>
+    `<tr>
+      <td style="font-family:var(--mono);font-size:12px">${t.pair}</td>
+      <td><span class="badge ${t.dir}">${t.dir.toUpperCase()}</span></td>
+      <td style="font-family:var(--mono);font-size:12px">${t.entry}</td>
+      <td style="font-family:var(--mono);font-size:12px">${t.exit}</td>
+      <td style="font-family:var(--mono);font-size:12px;color:${t.result==='win'?'var(--bull)':'var(--bear)'}">${t.pips}</td>
+      <td><span class="badge ${t.result}">${t.result.toUpperCase()}</span></td>
+      <td style="font-size:12px;color:var(--muted)">${t.session}</td>
+    </tr>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════════
+//  TRADE JOURNAL LOG
+// ═══════════════════════════════════════════
+let trades = JSON.parse(localStorage.getItem('apex_trades') || '[]');
+
+function logTrade() {
+  const pair    = document.getElementById('jPair').value;
+  const dir     = document.getElementById('jDir').value;
+  const entry   = parseFloat(document.getElementById('jEntry').value);
+  const exit    = parseFloat(document.getElementById('jExit').value);
+  const sl      = parseFloat(document.getElementById('jSL').value);
+  const lots    = parseFloat(document.getElementById('jLots').value) || 0.01;
+  const session = document.getElementById('jSession').value;
+  const notes   = document.getElementById('jNotes').value;
+
+  if(!entry || !exit) { alert('Please enter entry and exit prices.'); return; }
+
+  const pipSize = pair.includes('JPY') || pair.includes('XAU') ? (pair.includes('XAU') ? 0.1 : 0.01) : 0.0001;
+  const pips    = dir === 'BUY' ? (exit - entry) / pipSize : (entry - exit) / pipSize;
+  const result  = pips > 0 ? 'win' : 'loss';
+
+  trades.unshift({ pair, dir, entry, exit, sl, lots, session, notes, pips: pips.toFixed(1), result, time: new Date().toISOString() });
+  localStorage.setItem('apex_trades', JSON.stringify(trades));
+
+  updateJournalStats();
+  alert(`Trade logged! ${result === 'win' ? '✅' : '❌'} ${pips.toFixed(1)} pips`);
+
+  // Clear form
+  ['jEntry','jExit','jSL','jNotes'].forEach(id => document.getElementById(id).value = '');
+}
+
+function updateJournalStats() {
+  const total = trades.length;
+  const wins  = trades.filter(t => t.result === 'win').length;
+  const totalPips = trades.reduce((s,t) => s + parseFloat(t.pips), 0);
+  const best  = trades.reduce((b,t) => Math.max(b, parseFloat(t.pips)), 0);
+  const wr    = total > 0 ? Math.round(wins/total*100) : 0;
+
+  document.getElementById('jTotal').textContent   = total;
+  document.getElementById('jWinRate').textContent  = wr + '%';
+  document.getElementById('jWinRate').style.color  = wr >= 50 ? 'var(--bull)' : 'var(--bear)';
+  document.getElementById('jWinBar').style.width   = wr + '%';
+  document.getElementById('jPips').textContent     = totalPips.toFixed(1);
+  document.getElementById('jPips').style.color     = totalPips >= 0 ? 'var(--bull)' : 'var(--bear)';
+  document.getElementById('jBest').textContent     = best > 0 ? '+' + best.toFixed(1) + ' pips' : '--';
+}
+
+// ═══════════════════════════════════════════
+//  SESSION & TIMER
+// ═══════════════════════════════════════════
+function updateSession() {
+  const h = new Date().getUTCHours();
+  let name = 'CLOSED', time = '--:--';
+  if(h >= 0  && h < 8)  { name = 'ASIAN';    time = '00:00–08:00'; }
+  if(h >= 8  && h < 13) { name = 'LONDON';   time = '08:00–13:00'; }
+  if(h >= 13 && h < 16) { name = 'OVERLAP';  time = '13:00–16:00'; }
+  if(h >= 16 && h < 21) { name = 'NEW YORK'; time = '16:00–21:00'; }
+  document.getElementById('sessionDisplay').textContent = name;
+  document.getElementById('sessionTime').textContent    = time + ' GMT';
+}
+
+function updateTimer() {
+  const n   = new Date();
+  const rem = 3600 - (n.getUTCMinutes() * 60 + n.getUTCSeconds());
+  const mm  = Math.floor(rem/60).toString().padStart(2,'0');
+  const ss  = (rem%60).toString().padStart(2,'0');
+  document.getElementById('timerDash').textContent = `${mm}:${ss}`;
+}
+
+// ═══════════════════════════════════════════
+//  P&L SIMULATION
+// ═══════════════════════════════════════════
+let sessionPnL = 0, sessionPips = 0, sessionTrades = 0;
+function updatePnL() {
+  const move = (Math.random() - 0.45) * 2;
+  sessionPips += move;
+  sessionPnL = sessionPips * 0.9; // approx $0.9 per pip on 0.01 lot
+  const el = document.getElementById('pnlDisplay');
+  el.textContent = (sessionPnL >= 0 ? '+$' : '-$') + Math.abs(sessionPnL).toFixed(2);
+  el.style.color = sessionPnL >= 0 ? 'var(--bull)' : 'var(--bear)';
+  document.getElementById('pipsDisplay').textContent =
+    `${sessionPips.toFixed(1)} pips · ${sessionTrades} trades`;
+  document.getElementById('pnlBar').style.width = Math.min(100, Math.abs(sessionPips) * 2) + '%';
+  document.getElementById('pnlBar').style.background = sessionPnL >= 0 ? 'var(--bull)' : 'var(--bear)';
+}
+
+// ═══════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════
+function openModal(tab) {
+  document.getElementById('authModal').classList.add('open');
+  switchTab(tab, document.querySelector(`.modal-tab:${tab==='login'?'first':'last'}-child`));
+}
+function closeModal() { document.getElementById('authModal').classList.remove('open'); }
+function switchTab(tab, el) {
+  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('loginForm').style.display    = tab === 'login'    ? 'flex' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'flex' : 'none';
+}
+function fakeLogin() {
+  closeModal();
+  alert('✅ Account system coming soon! For now use the trading bot directly.');
+}
+document.getElementById('authModal').addEventListener('click', e => {
+  if(e.target === document.getElementById('authModal')) closeModal();
+});
+
+// ═══════════════════════════════════════════
+//  SCROLL ANIMATIONS
+// ═══════════════════════════════════════════
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+// ═══════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════
+buildTicker();
+buildMiniChart();
+buildNews();
+buildCalendar();
+buildGeo();
+buildJournalPreview();
+updateJournalStats();
+updateSession();
+updateTimer();
+
+setInterval(tickPrices, 3000);
+setInterval(updateTimer, 1000);
+setInterval(updateSession, 60000);
+setInterval(updatePnL, 4000);
+</script>
+</body>
+</html>
